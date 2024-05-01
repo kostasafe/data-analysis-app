@@ -1,17 +1,25 @@
 import streamlit as st
 from streamlit_navigation_bar import st_navbar
+import os
+import pages as pg
 
 st.set_page_config(initial_sidebar_state="collapsed")
 
-pages = ["Home", "2D Visualization", "Μηχανική Μάθηση 1", "Μηχανική Μάθηση 2", "Comparison", "Info", "GitHub"]
+pages = ["Home", "2D Visualization", "1st Machine Learning Algorithm", "2nd Machine Learning Algorithm", "Algorithm Comparison", "Information", "GitHub"]
+urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/tree/main"}
+parent_dir = os.path.dirname(os.path.abspath("__file__"))
+options = {
+    "show_menu": False,
+    "show_sidebar":False,
+}
 
 styles = {
     "nav": {
         "background-color": "#213a85",
-        "justify-content": "left",
+        "justify-content": "center",
     },
     "div": {
-        "max-width": "32rem",
+        "max-width": "60rem",
     },
     "span": {
         "border-radius": "0.5rem",
@@ -20,7 +28,7 @@ styles = {
     },
     "active": {
         "color": "var(--text-color)",
-        "background-color": "white",
+        "background-color": "black",
         "font-weight": "normal",
         "padding": "14px",
     },
@@ -28,9 +36,19 @@ styles = {
         "background-color": "rgba(255, 255, 255, 0.35)",
     },
 }
+functions = {
+    "Home": pg.show_Home,
+    #"2D Visualization": pg.show_TwoD_Visualization,
+    #"First Machine Learning Algorithm": pg.show_First_Machine_Learning_Algorithm,
+    #"Second Machine Learning Algorithm": pg.show_Second_Machine_Learning_Algorithm,
+    #"Comparison": pg.show_Comparison,
+    #"Info": pg.show_Info,
+    #"GitHub" :pg.show_Git,
+    
+}
 
-page = st_navbar(pages, styles=styles)
-st.write(page)
+page = st_navbar(pages, styles=styles, urls=urls, options=options,)
 
-with st.sidebar:
-    st.write("Sidebar")
+go_to = functions.get(page)
+if go_to:
+    go_to()
