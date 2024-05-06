@@ -1,5 +1,5 @@
 import streamlit as st
-import panda as pd
+import pandas as pd
 import csv
 from io import StringIO
 
