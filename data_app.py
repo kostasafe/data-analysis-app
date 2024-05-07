@@ -6,7 +6,7 @@ import pages as pg
 st.set_page_config(initial_sidebar_state="collapsed")
 
 pages = ["Home", "2D Visualization", "1st Machine Learning Algorithm", "2nd Machine Learning Algorithm", "Algorithm Comparison", "Information", "GitHub"]
-urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/tree/main"}
+urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/"}
 parent_dir = os.path.dirname(os.path.abspath("__file__"))
 options = {
     "show_menu": False,
