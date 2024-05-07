@@ -10,7 +10,7 @@ urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/tree/main"}
 parent_dir = os.path.dirname(os.path.abspath("__file__"))
 options = {
     "show_menu": False,
-    "show_sidebar":False,
+    "show_sidebar": False,
 }
 
 styles = {
@@ -44,10 +44,9 @@ functions = {
     #"Comparison": pg.show_Comparison,
     #"Info": pg.show_Info,
     #"GitHub" :pg.show_Git,
-    
 }
 
-page = st_navbar(pages, styles=styles, urls=urls, options=options,)
+page = st_navbar(pages, styles=styles, urls=urls,options=options,)
 
 go_to = functions.get(page)
 if go_to:
