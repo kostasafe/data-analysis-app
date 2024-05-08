@@ -1,8 +1,6 @@
 import streamlit as st
 import csv
 import pandas as pd
-from io import StringIO
-import os
 
 
 def show_Home(): 
@@ -15,8 +13,9 @@ def show_Home():
                 generate_button = st.button('Πατήστε εδώ για προβολή του dataset ως λίστα!')
                 if generate_button:
                         new_list = load_data(uploaded_file)
-                        st.write(new_list)  
-
+                        if new_list not in st.session_state:
+                                st.session_state.new_dataset = new_list #store our dataframe to session_state
+                        st.write(new_list)
                         
 
 
@@ -24,5 +23,3 @@ def load_data(uploaded_file):
         if uploaded_file.name.endswith('.csv'):
                 df = pd.read_csv(uploaded_file)
                 return df
-
-

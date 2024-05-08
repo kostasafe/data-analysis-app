@@ -38,7 +38,7 @@ styles = {
 }
 functions = {
     "Home": pg.show_Home,
-    #"2D Visualization": pg.show_TwoD_Visualization,
+    "2D Visualization": pg.show_TwoD_Visualization,
     #"First Machine Learning Algorithm": pg.show_First_Machine_Learning_Algorithm,
     #"Second Machine Learning Algorithm": pg.show_Second_Machine_Learning_Algorithm,
     #"Comparison": pg.show_Comparison,
