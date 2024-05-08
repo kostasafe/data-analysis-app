@@ -11,10 +11,10 @@ def show_Home():
                 # To read file as bytes:
                 #bytes_data = uploaded_file.getvalue()
                 generate_button = st.button('Πατήστε εδώ για προβολή του dataset ως λίστα!')
+                new_list = load_data(uploaded_file)
+                if new_list not in st.session_state:
+                        st.session_state.new_dataset = new_list #store our dataframe to session_state
                 if generate_button:
-                        new_list = load_data(uploaded_file)
-                        if new_list not in st.session_state:
-                                st.session_state.new_dataset = new_list #store our dataframe to session_state
                         st.write(new_list)
                         
 
