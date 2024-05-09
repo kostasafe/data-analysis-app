@@ -6,6 +6,8 @@ def show_Home():
         st.title("Καλωσήρθατε στην Εφαρμογή Εξόρυξης και Ανάλυσης δεδομένων!")
         st.header( "Παρακαλώ φορτώστε ένα αρχείο:")
         uploaded_file = st.file_uploader("Choose a CSV or Excel file", type={"csv", "excel"})
+        if uploaded_file not in st.session_state:
+                st.session_state.uploaded_file = uploaded_file
         if uploaded_file is not None:
                 # To read file as bytes:
                 #bytes_data = uploaded_file.getvalue()
