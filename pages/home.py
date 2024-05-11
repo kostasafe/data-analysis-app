@@ -22,13 +22,20 @@ def show_Home():
                 column_names_str = " | ".join(column_names) #split them with |
                 column_names_formatted = f"**<b>Columns:</b>** [{column_names_str}]" #make it prettier
                 st.markdown(column_names_formatted, unsafe_allow_html=True)
-                output_column = st.text_input("Παρακαλώ γράψτε μου το ακριβές όνομα όπως αναγράφεται παραπάνω!" ,key="output_column")
+                output_column = st.text_input("Παρακαλώ γράψτε μου το ακριβές όνομα όπως αναγράφεται παραπάνω!")
                 generate_button_2 = st.button('Πατήστε εδώ για προβολή του διορθωμένου dataset!')
                 if generate_button_2:
-                        if st.session_state.output_column:
-                                st.session_state.fixed_dataframe = transform_dataframe(st.session_state.new_dataset , output_column)
-                                st.write(st.session_state.fixed_dataframe)
-                                st.balloons()
+                        if output_column :
+                                st.session_state.target = st.session_state.new_dataset.pop(output_column)
+                                left_column, right_column = st.columns(2)
+                                with left_column:
+                                        st.write("¨Νέο Dataframe:")
+                                        st.write(st.session_state.new_dataset)
+
+                                with right_column:
+                                        st.write("Μεταβλητή Εξόδου:")
+                                        st.write(pd.DataFrame({output_column: st.session_state.target}))
+                                        st.balloons()
                         
 
 
@@ -39,8 +46,3 @@ def load_data(uploaded_file):
         elif uploaded_file.name.endswith('.xlsx'):
                 df = pd.read_excel(uploaded_file)
                 return df
-
-def transform_dataframe(df , column):
-        if column :
-                df = df[[col for col in df.columns if col != column] + [column]] #dataframe convertion so it fits the users request
-        return df
