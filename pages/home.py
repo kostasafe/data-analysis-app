@@ -24,18 +24,23 @@ def show_Home():
                 st.markdown(column_names_formatted, unsafe_allow_html=True)
                 output_column = st.text_input("Παρακαλώ γράψτε μου το ακριβές όνομα όπως αναγράφεται παραπάνω!")
                 generate_button_2 = st.button('Πατήστε εδώ για προβολή του διορθωμένου dataset!')
-                if generate_button_2:
-                        if output_column :
-                                st.session_state.target = st.session_state.new_dataset.pop(output_column)
+                if output_column :
+                        if generate_button_2:    
+                                dataset_without_column = st.session_state.new_dataset.copy() #if we dont make a copy like this our new_dataset saved dataframe will be lost
+                                st.session_state.target_column = dataset_without_column.pop(output_column)
+                
+                                # Display the modified DataFrame in left_column
                                 left_column, right_column = st.columns(2)
                                 with left_column:
-                                        st.write("¨Νέο Dataframe:")
-                                        st.write(st.session_state.new_dataset)
-
+                                        st.write("Νέο Dataframe:")
+                                        st.write(dataset_without_column)
+                
+                                # Display the excluded column in right_column
                                 with right_column:
                                         st.write("Μεταβλητή Εξόδου:")
-                                        st.write(pd.DataFrame({output_column: st.session_state.target}))
+                                        st.write(st.session_state.target_column)
                                         st.balloons()
+
                         
 
 
