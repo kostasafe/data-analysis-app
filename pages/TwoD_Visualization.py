@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 
-def show_First_Machine_Learning_Algorithm():
+def show_TwoD_Visualization():
     
     '''numeric_df = st.session_state.new_dataset.select_dtypes(include=['number']) #include only numeric columns
                 
