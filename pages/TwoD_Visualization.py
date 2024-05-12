@@ -8,17 +8,17 @@ from sklearn.impute import SimpleImputer
 
 def show_TwoD_Visualization():
     
-    '''numeric_df = st.session_state.new_dataset.select_dtypes(include=['number']) #include only numeric columns
+    numeric_df = st.session_state.new_dataset.select_dtypes(include=['number']) #include only numeric columns
                 
     imputer = SimpleImputer(strategy='mean') #we need to exclude also the empty cells
-    numeric_df_imputed = pd.DataFrame(imputer.fit_transform(numeric_df), columns = numeric_df.columns)'''
+    numeric_df_imputed = pd.DataFrame(imputer.fit_transform(numeric_df), columns = numeric_df.columns)
     
     
     
     #we need to standardize the data
-    x = st.session_state.new_dataset.loc[:,st.session_state.new_dataset.columns].values
+    x = numeric_df_imputed.loc[:,numeric_df_imputed.columns].values
 
-    y = st.session_state.new_dataset.loc[:, [st.session_state.target_column.name]].values
+    y = numeric_df_imputed.loc[:, [st.session_state.target_column.name]].values
 
     x = StandardScaler().fit_transform(x)
 
@@ -26,7 +26,7 @@ def show_TwoD_Visualization():
     principalComponents = pca.fit_transform(x)
     principalDf = pd.DataFrame(data = principalComponents
              , columns = ['principal component 1', 'principal component 2'])
-    finalDf = pd.concat([principalDf,st.session_state.new_dataset[[st.session_state.target_column.name]]], axis = 1)
+    finalDf = pd.concat([principalDf,numeric_df_imputed[[st.session_state.target_column.name]]], axis = 1)
 
     script_dir = os.path.dirname(os.path.abspath(__file__)) #fixing a path error
     save_path = os.path.join(script_dir, '..', 'img', 'PCA.png') #save_path is used to create a .png file of the plot we generated so we can project it with streanlit
