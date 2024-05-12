@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 
-def show_First_Machine_Learning_Algorithm():
+def show_TwoD_Visualization():
     
     '''numeric_df = st.session_state.new_dataset.select_dtypes(include=['number']) #include only numeric columns
                 
@@ -31,15 +31,14 @@ def show_First_Machine_Learning_Algorithm():
     script_dir = os.path.dirname(os.path.abspath(__file__)) #fixing a path error
     save_path = os.path.join(script_dir, '..', 'img', 'PCA.png') #save_path is used to create a .png file of the plot we generated so we can project it with streanlit
 
-
     fig = plt.figure(figsize = (8,8))
     ax = fig.add_subplot (1,1,1)
     ax.set_xlabel('Principal Component 1', fontsize = 15)
     ax.set_ylabel('Principal Component 2', fontsize = 15)
     ax.set_title('2 component PCA', fontsize = 20)
 
-    column_values = str(st.session_state.target_column)
-    targets = ', '.join(column_values)
+    targets = st.session_state.target_column.unique().tolist()
+    targets_str = ", ".join(str(target) for target in targets)
     
     colors = ['r', 'g', 'b']
     for target, color in zip(targets,colors):
@@ -47,8 +46,9 @@ def show_First_Machine_Learning_Algorithm():
         ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
                    , finalDf.loc[indicesToKeep, 'principal component 2']
                    , c = color
-                   ,s = 50)
-    ax.legend(targets)
+                   ,s = 50,
+                   label=target)
+    ax.legend()
     ax.grid()
 
     fig.savefig(save_path)
