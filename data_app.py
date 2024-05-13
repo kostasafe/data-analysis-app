@@ -3,7 +3,7 @@ from streamlit_navigation_bar import st_navbar
 import os
 import pages as pg
 
-st.set_page_config(initial_sidebar_state="collapsed")
+st.set_page_config(initial_sidebar_state="collapsed", page_title='data app', page_icon='img/ionianlogo.ico')
 
 pages = ["Home", "2D Visualization", "1st Machine Learning Algorithm", "2nd Machine Learning Algorithm", "Algorithm Comparison", "Information", "GitHub"]
 urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/"}
