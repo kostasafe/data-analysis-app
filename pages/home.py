@@ -4,8 +4,8 @@ import pandas as pd
 
 def show_Home(): 
         st.title("Καλωσήρθατε στην Εφαρμογή Εξόρυξης και Ανάλυσης δεδομένων!")
-        st.header( "Παρακαλώ φορτώστε ένα αρχείο:")
-        uploaded_file = st.file_uploader("Choose a CSV or Excel file", type={"csv", "excel"})
+        st.header( "Παρακαλώ φορτώστε ένα αρχείο:", divider='rainbow')
+        uploaded_file = st.file_uploader("Choose a :green[CSV] or :green[Excel] file", type={"csv", "excel"})
         if uploaded_file not in st.session_state:
                 st.session_state.uploaded_file = uploaded_file
         if uploaded_file is not None:

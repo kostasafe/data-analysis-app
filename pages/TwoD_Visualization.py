@@ -53,4 +53,6 @@ def show_TwoD_Visualization():
 
     fig.savefig(save_path)
 
+    st. title("2D Visualizations")
+    st.header(":red[Principal Component Analysis (PCA)]", divider='rainbow')
     st.image(save_path, caption='PCA 2D Projection', use_column_width=True)
