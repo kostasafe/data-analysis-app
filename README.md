@@ -12,5 +12,5 @@ To run the app type the following command <code class="language-python">streamli
 
 <details>
 <summary> Contributors </summary>
-Persefoni Megaliou, Afentoulis Konstantinos
+Persefoni Megaliou, Afentoulis Konstantinos, Aggelos Kalocheris
 </details>
