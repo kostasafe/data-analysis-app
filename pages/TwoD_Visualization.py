@@ -1,24 +1,20 @@
-import os
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.impute import SimpleImputer
+from sklearn.manifold import TSNE
 
-def show_TwoD_Visualization():
+def show_PCA_Visualization():
     
-    numeric_df = st.session_state.new_dataset.select_dtypes(include=['number']) #include only numeric columns
-                
-    imputer = SimpleImputer(strategy='mean') #we need to exclude also the empty cells
-    numeric_df_imputed = pd.DataFrame(imputer.fit_transform(numeric_df), columns = numeric_df.columns)
-    
-    
-    
-    #we need to standardize the data
-    x = numeric_df_imputed.loc[:,numeric_df_imputed.columns].values
+    #select all columns except the target column
+    features = st.session_state.new_dataset.drop(columns=[st.session_state.target_column.name]).columns
 
-    y = numeric_df_imputed.loc[:, [st.session_state.target_column.name]].values
+    #Standardization
+    x = st.session_state.new_dataset[features].values
+
+    y = st.session_state.new_dataset[st.session_state.target_column.name]
 
     x = StandardScaler().fit_transform(x)
 
@@ -26,22 +22,19 @@ def show_TwoD_Visualization():
     principalComponents = pca.fit_transform(x)
     principalDf = pd.DataFrame(data = principalComponents
              , columns = ['principal component 1', 'principal component 2'])
-    finalDf = pd.concat([principalDf,numeric_df_imputed[[st.session_state.target_column.name]]], axis = 1)
-
-    script_dir = os.path.dirname(os.path.abspath(__file__)) #fixing a path error
-    save_path = os.path.join(script_dir, '..', 'img', 'PCA.png') #save_path is used to create a .png file of the plot we generated so we can project it with streanlit
+    finalDf = pd.concat([principalDf, y.reset_index(drop=True)], axis=1)
 
     fig = plt.figure(figsize = (8,8))
     ax = fig.add_subplot (1,1,1)
     ax.set_xlabel('Principal Component 1', fontsize = 15)
     ax.set_ylabel('Principal Component 2', fontsize = 15)
-    ax.set_title('2 component PCA', fontsize = 20)
+    ax.set_title('Two Component PCA', fontsize = 20)
 
-    targets = st.session_state.target_column.unique().tolist()
-    targets_str = ", ".join(str(target) for target in targets)
-    
-    colors = ['r', 'g', 'b']
-    for target, color in zip(targets,colors):
+    #get the unique target values and colors
+    unique_targets = y.unique()
+    colors = ['r', 'g', 'b'][:len(unique_targets)]
+    #ploting for each target with a different color
+    for target, color in zip(unique_targets,colors):
         indicesToKeep = finalDf[st.session_state.target_column.name] == target
         ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
                    , finalDf.loc[indicesToKeep, 'principal component 2']
@@ -51,8 +44,76 @@ def show_TwoD_Visualization():
     ax.legend()
     ax.grid()
 
-    fig.savefig(save_path)
+    st.pyplot(fig)
 
-    st. title("2D Visualizations")
-    st.header(":red[Principal Component Analysis (PCA)]", divider='rainbow')
-    st.image(save_path, caption='PCA 2D Projection', use_column_width=True)
+def show_TSNE_Visualization():
+
+    TSNE_data = st.session_state.new_dataset
+    features = TSNE_data.drop(columns=[st.session_state.target_column.name]).columns
+    target_column = st.session_state.target_column.name
+
+    data_norm = TSNE_data.copy()
+    sc = StandardScaler()
+    data_norm[features] = sc.fit_transform(TSNE_data[features])
+
+    tsne = TSNE(learning_rate= 500, n_components= 2)
+
+    x_tsne = tsne.fit_transform(data_norm[features])
+    y_tsne = TSNE_data[target_column]
+
+    # Convert target values to numerical categories for color coding
+    unique_targets = y_tsne.unique()
+    target_to_num = {target: num for num, target in enumerate(unique_targets)}
+    y_num = y_tsne.map(target_to_num)
+
+    plt.figure(figsize = (16,11))
+    for target, color in zip(unique_targets, ['r', 'g', 'b']):
+        indices_to_keep = y_num == target_to_num[target]
+        plt.scatter(x_tsne[indices_to_keep, 0], x_tsne[indices_to_keep, 1], label=target, color=color, marker='*')
+
+    plt.xlabel("Dim 1", fontsize = 15)
+    plt.ylabel("Dim 2", fontsize = 15)
+    plt.title("T-SNE", fontsize = 20)
+    plt.legend()
+    plt.grid()
+    st.pyplot(plt)
+
+def show_TwoD_Visualization():
+    st.markdown(
+        """
+        <style>
+        .title {
+            font-size: 70px;
+            text-align: center-top;
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+        .header {
+            font-size: 40px;
+            color: FireBrick;
+            text-align: center;
+        }
+        .header-tsne {
+            font-size: 40px;
+            color: violet;
+            text-align: center;
+        }
+        .divider {
+            margin: 30px 0;
+            border-bottom: 2px solid #ddd;
+        }
+        </style>
+        """, unsafe_allow_html=True
+    )
+    
+    st.markdown('<div class="title">2D Visualizations</div>', unsafe_allow_html=True)
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="header">Principal Component Analysis (PCA)</div>', unsafe_allow_html=True) 
+    st.divider()
+    show_PCA_Visualization()
+    
+    
+    st.markdown('<div class="header-tsne">T-Distributed Neighbor Embedding (t-SNE)</div>', unsafe_allow_html=True)
+    st.divider()
+    show_TSNE_Visualization()
