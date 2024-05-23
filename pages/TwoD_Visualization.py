@@ -1,4 +1,5 @@
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
@@ -84,7 +85,7 @@ def show_TwoD_Visualization():
         <style>
         .title {
             font-size: 70px;
-            text-align: center-top;
+            text-align: center;
             margin-bottom: 0px;
             margin-top: 0px;
         }
@@ -107,13 +108,65 @@ def show_TwoD_Visualization():
     )
     
     st.markdown('<div class="title">2D Visualizations</div>', unsafe_allow_html=True)
-    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+    if st.session_state.uploaded_file is not None:
+        st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="header">Principal Component Analysis (PCA)</div>', unsafe_allow_html=True) 
-    st.divider()
-    show_PCA_Visualization()
-    
-    
-    st.markdown('<div class="header-tsne">T-Distributed Neighbor Embedding (t-SNE)</div>', unsafe_allow_html=True)
-    st.divider()
-    show_TSNE_Visualization()
+        left_column, right_column = st.columns(2)
+        with left_column:
+            st.markdown('<div class="header">Principal Component Analysis (PCA)</div>', unsafe_allow_html=True) 
+            st.divider()
+            show_PCA_Visualization()
+        
+        with right_column:
+            st.markdown('<div class="header-tsne">T-Distributed Neighbor Embedding (t-SNE)</div>', unsafe_allow_html=True)
+            st.divider()
+            show_TSNE_Visualization()
+        
+        EDA_df = st.session_state.new_dataset
+        st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+        numeric_columns = EDA_df.select_dtypes(include=['float64', 'int64']).columns.tolist()
+        if not numeric_columns:
+            st.warning("No numeric columns found in the uploaded dataset.")
+            return
+        selected_feature = st.selectbox("Select a feature for analysis", numeric_columns)
+        
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            generate_button1 = st.button('Histogram')
+            if generate_button1:
+                st.markdown('<div class="header">Histogram of Selected Feature</div>', unsafe_allow_html=True)
+                st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sns.histplot(EDA_df[selected_feature], bins=10, kde=True, ax=ax)
+                ax.set_title(f'Histogram of {selected_feature}')
+                ax.set_xlabel(selected_feature)
+                ax.set_ylabel('Frequency')
+                st.pyplot(fig)
+        with col2:
+            generate_button2 = st.button('Box Plot')
+            if generate_button2:
+                st.markdown('<div class="header">Box Plot of Selected Feature</div>', unsafe_allow_html=True)
+                st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sns.boxplot(x=EDA_df[selected_feature], ax=ax)
+                ax.set_title(f'Box Plot of {selected_feature}')
+                ax.set_xlabel(selected_feature)
+                st.pyplot(fig)
+        with col3:
+            generate_button3 = st.button('Scatter Plot')
+            if generate_button3:
+                if len(numeric_columns) > 1:
+                    st.markdown('<div class="header">Scatter Plot of Selected Features</div>', unsafe_allow_html=True)
+                    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+                    second_feature = st.selectbox("Select another feature for scatter plot", [col for col in numeric_columns if col != selected_feature])
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    sns.scatterplot(x=selected_feature, y=second_feature, data=EDA_df, ax=ax)
+                    ax.set_title(f'Scatter Plot of {selected_feature} vs {second_feature}')
+                    ax.set_xlabel(selected_feature)
+                    ax.set_ylabel(second_feature)
+                    st.pyplot(fig)
+                else:
+                    st.warning("Not enough numeric features for a scatter plot.")
+    else:
+        st.warning("Please upload a CSV or an Excel file in Home Page to proceed.")

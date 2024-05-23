@@ -2,8 +2,20 @@ import streamlit as st
 import pandas as pd
 
 
-def show_Home(): 
-        st.title("Καλωσήρθατε στην Εφαρμογή Εξόρυξης και Ανάλυσης δεδομένων!")
+def show_Home():
+        st.markdown(
+        """
+        <style>
+        .title {
+            font-size: 70px;
+            text-align: center;
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+         </style>
+        """, unsafe_allow_html=True
+        )
+        st.markdown('<div class="title">Καλωσήρθατε στην Εφαρμογή Εξόρυξης και Ανάλυσης δεδομένων!</div>', unsafe_allow_html=True)
         st.header( "Παρακαλώ φορτώστε ένα αρχείο:", divider='rainbow')
         uploaded_file = st.file_uploader("Choose a :green[CSV] or :green[Excel] file", type={"csv", "excel"})
         if uploaded_file not in st.session_state:
@@ -18,11 +30,16 @@ def show_Home():
                 if generate_button_1:
                         st.write(new_list)
                 st.header("Ποια στήλη αντιστοιχεί στη μεταβλητή εξόδου;")
-                column_names = st.session_state.new_dataset.columns.tolist() #taking column headers and convert them to a list
-                column_names_str = " | ".join(column_names) #split them with |
-                column_names_formatted = f"**<b>Columns:</b>** [{column_names_str}]" #make it prettier
-                st.markdown(column_names_formatted, unsafe_allow_html=True)
-                output_column = st.text_input("Παρακαλώ γράψτε μου το ακριβές όνομα όπως αναγράφεται παραπάνω!")
+                
+                output_column = st.selectbox("Παρακαλώ διαλέξτε τη μεταβλητή εξόδου!", st.session_state.new_dataset.columns)
+                if output_column not in st.session_state:
+                        st.session_state.output_column = output_column
+
+                #column_names = st.session_state.new_dataset.columns.tolist() #taking column headers and convert them to a list
+                #column_names_str = " | ".join(column_names) #split them with |
+                #column_names_formatted = f"**<b>Columns:</b>** [{column_names_str}]" #make it prettier
+                #st.markdown(column_names_formatted, unsafe_allow_html=True)
+                #output_column = st.text_input("Παρακαλώ γράψτε μου το ακριβές όνομα όπως αναγράφεται παραπάνω!")
                 generate_button_2 = st.button('Πατήστε εδώ για προβολή του διορθωμένου dataset!')
                 if output_column :
                         if generate_button_2:    

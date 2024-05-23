@@ -3,3 +3,4 @@ streamlit_navigation_bar
 pandas
 matplotlib
 scikit-learn
+seaborn

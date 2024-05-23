@@ -3,7 +3,7 @@ from streamlit_navigation_bar import st_navbar
 import os
 import pages as pg
 
-st.set_page_config(initial_sidebar_state="collapsed", page_title='data app', page_icon='img/ionianlogo.ico')
+st.set_page_config(layout="wide",initial_sidebar_state="collapsed", page_title='data app', page_icon='img/ionianlogo.ico')
 
 pages = ["Home", "2D Visualization", "1st Machine Learning Algorithm", "2nd Machine Learning Algorithm", "Algorithm Comparison", "Information", "GitHub"]
 urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/"}
@@ -19,7 +19,7 @@ styles = {
         "justify-content": "center",
     },
     "div": {
-        "max-width": "60rem",
+        "max-width": "80rem",
     },
     "span": {
         "border-radius": "0.5rem",
@@ -41,7 +41,7 @@ functions = {
     "2D Visualization": pg.show_TwoD_Visualization,
     #"1st Machine Learning Algorithm": pg.show_First_Machine_Learning_Algorithm,
     #"Second Machine Learning Algorithm": pg.show_Second_Machine_Learning_Algorithm,
-    #"Comparison": pg.show_Comparison,
+    "Algorithm Comparison": pg.show_Comparison,
     "Information": pg.show_Info,
     #"GitHub" :pg.show_Git,
 }
