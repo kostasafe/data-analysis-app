@@ -8,47 +8,22 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
 def show_PCA_Visualization():
-    
-    #select all columns except the target column
+    # Select all columns except the target column
     features = st.session_state.new_dataset.drop(columns=[st.session_state.target_column.name]).columns
 
-    #Standardization
+    # Standardization
     x = st.session_state.new_dataset[features].values
-
     y = st.session_state.new_dataset[st.session_state.target_column.name]
-
     x = StandardScaler().fit_transform(x)
 
     pca = PCA(n_components=2)
     principalComponents = pca.fit_transform(x)
-    principalDf = pd.DataFrame(data = principalComponents
-             , columns = ['principal component 1', 'principal component 2'])
+    principalDf = pd.DataFrame(data=principalComponents, columns=['principal component 1', 'principal component 2'])
     finalDf = pd.concat([principalDf, y.reset_index(drop=True)], axis=1)
 
-    fig = plt.figure(figsize = (8,8))
-    ax = fig.add_subplot (1,1,1)
-    ax.set_xlabel('Principal Component 1', fontsize = 15)
-    ax.set_ylabel('Principal Component 2', fontsize = 15)
-    ax.set_title('Two Component PCA', fontsize = 20)
-
-    #get the unique target values and colors
-    unique_targets = y.unique()
-    colors = ['r', 'g', 'b'][:len(unique_targets)]
-    #ploting for each target with a different color
-    for target, color in zip(unique_targets,colors):
-        indicesToKeep = finalDf[st.session_state.target_column.name] == target
-        ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
-                   , finalDf.loc[indicesToKeep, 'principal component 2']
-                   , c = color
-                   ,s = 50,
-                   label=target)
-    ax.legend()
-    ax.grid()
-
-    st.pyplot(fig)
+    return finalDf, y
 
 def show_TSNE_Visualization():
-
     TSNE_data = st.session_state.new_dataset
     features = TSNE_data.drop(columns=[st.session_state.target_column.name]).columns
     target_column = st.session_state.target_column.name
@@ -57,27 +32,14 @@ def show_TSNE_Visualization():
     sc = StandardScaler()
     data_norm[features] = sc.fit_transform(TSNE_data[features])
 
-    tsne = TSNE(learning_rate= 500, n_components= 2)
-
+    tsne = TSNE(learning_rate=500, n_components=2)
     x_tsne = tsne.fit_transform(data_norm[features])
     y_tsne = TSNE_data[target_column]
 
-    # Convert target values to numerical categories for color coding
-    unique_targets = y_tsne.unique()
-    target_to_num = {target: num for num, target in enumerate(unique_targets)}
-    y_num = y_tsne.map(target_to_num)
+    tsneDf = pd.DataFrame(data=x_tsne, columns=['Dim 1', 'Dim 2'])
+    finalDf = pd.concat([tsneDf, y_tsne.reset_index(drop=True)], axis=1)
 
-    plt.figure(figsize = (16,11))
-    for target, color in zip(unique_targets, ['r', 'g', 'b']):
-        indices_to_keep = y_num == target_to_num[target]
-        plt.scatter(x_tsne[indices_to_keep, 0], x_tsne[indices_to_keep, 1], label=target, color=color, marker='*')
-
-    plt.xlabel("Dim 1", fontsize = 15)
-    plt.ylabel("Dim 2", fontsize = 15)
-    plt.title("T-SNE", fontsize = 20)
-    plt.legend()
-    plt.grid()
-    st.pyplot(plt)
+    return finalDf, y_tsne
 
 def show_TwoD_Visualization():
     st.markdown(
@@ -104,69 +66,129 @@ def show_TwoD_Visualization():
             border-bottom: 2px solid #ddd;
         }
         </style>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True
     )
     
     st.markdown('<div class="title">2D Visualizations</div>', unsafe_allow_html=True)
     if st.session_state.uploaded_file is not None:
         st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
+        # Display PCA
         left_column, right_column = st.columns(2)
         with left_column:
             st.markdown('<div class="header">Principal Component Analysis (PCA)</div>', unsafe_allow_html=True) 
-            st.divider()
-            show_PCA_Visualization()
-        
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            pca_df, pca_targets = show_PCA_Visualization()
+            unique_targets = pca_targets.unique()
+            colors = ['r', 'g', 'b'][:len(unique_targets)]
+            fig = plt.figure(figsize=(8, 8))
+            ax = fig.add_subplot(1, 1, 1)
+            ax.set_xlabel('Principal Component 1', fontsize=15)
+            ax.set_ylabel('Principal Component 2', fontsize=15)
+            ax.set_title('Two Component PCA', fontsize=20)
+            for target, color in zip(unique_targets, colors):
+                indicesToKeep = pca_df[st.session_state.target_column.name] == target
+                ax.scatter(pca_df.loc[indicesToKeep, 'principal component 1'],
+                           pca_df.loc[indicesToKeep, 'principal component 2'],
+                           c=color,
+                           s=50,
+                           label=target)
+            ax.legend()
+            ax.grid()
+            st.pyplot(fig)
+
+        # Display t-SNE
         with right_column:
             st.markdown('<div class="header-tsne">T-Distributed Neighbor Embedding (t-SNE)</div>', unsafe_allow_html=True)
-            st.divider()
-            show_TSNE_Visualization()
-        
-        EDA_df = st.session_state.new_dataset
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            tsne_df, tsne_targets = show_TSNE_Visualization()
+            unique_targets = tsne_targets.unique()
+            colors = ['r', 'g', 'b'][:len(unique_targets)]
+            fig = plt.figure(figsize=(16, 11))
+            for target, color in zip(unique_targets, colors):
+                indices_to_keep = tsne_df[st.session_state.target_column.name] == target
+                plt.scatter(tsne_df.loc[indices_to_keep, 'Dim 1'],
+                            tsne_df.loc[indices_to_keep, 'Dim 2'],
+                            label=target,
+                            color=color,
+                            marker='*')
+            plt.xlabel("Dim 1", fontsize=15)
+            plt.ylabel("Dim 2", fontsize=15)
+            plt.title("T-SNE", fontsize=20)
+            plt.legend()
+            plt.grid()
+            st.pyplot(plt)
+
+        # EDA plots
         st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-        numeric_columns = EDA_df.select_dtypes(include=['float64', 'int64']).columns.tolist()
-        if not numeric_columns:
-            st.warning("No numeric columns found in the uploaded dataset.")
-            return
-        selected_feature = st.selectbox("Select a feature for analysis", numeric_columns)
-        
+        st.markdown('<div class="header">Exploratory Data Analysis (EDA) Plots</div>', unsafe_allow_html=True)
+        st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+        eda_df = st.session_state.new_dataset
+        pca_selected_feature1 = 'principal component 1'
+        pca_selected_feature2 = 'principal component 2'
+        tsne_selected_feature1 = 'Dim 1'
+        tsne_selected_feature2 = 'Dim 2'
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            generate_button1 = st.button('Histogram')
-            if generate_button1:
-                st.markdown('<div class="header">Histogram of Selected Feature</div>', unsafe_allow_html=True)
-                st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-                fig, ax = plt.subplots(figsize=(10, 6))
-                sns.histplot(EDA_df[selected_feature], bins=10, kde=True, ax=ax)
-                ax.set_title(f'Histogram of {selected_feature}')
-                ax.set_xlabel(selected_feature)
-                ax.set_ylabel('Frequency')
-                st.pyplot(fig)
+            st.markdown('<div class="header">PCA Histogram</div>', unsafe_allow_html=True)
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.histplot(pca_df[pca_selected_feature1], bins=10, kde=True, ax=ax)
+            ax.set_title(f'Histogram of {pca_selected_feature1}')
+            ax.set_xlabel(pca_selected_feature1)
+            ax.set_ylabel('Frequency')
+            st.pyplot(fig)
+
         with col2:
-            generate_button2 = st.button('Box Plot')
-            if generate_button2:
-                st.markdown('<div class="header">Box Plot of Selected Feature</div>', unsafe_allow_html=True)
-                st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-                fig, ax = plt.subplots(figsize=(10, 6))
-                sns.boxplot(x=EDA_df[selected_feature], ax=ax)
-                ax.set_title(f'Box Plot of {selected_feature}')
-                ax.set_xlabel(selected_feature)
-                st.pyplot(fig)
+            st.markdown('<div class="header">PCA Box Plot</div>', unsafe_allow_html=True)
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.boxplot(x=pca_df[pca_selected_feature1], ax=ax)
+            ax.set_title(f'Box Plot of {pca_selected_feature1}')
+            ax.set_xlabel(pca_selected_feature1)
+            st.pyplot(fig)
+
         with col3:
-            generate_button3 = st.button('Scatter Plot')
-            if generate_button3:
-                if len(numeric_columns) > 1:
-                    st.markdown('<div class="header">Scatter Plot of Selected Features</div>', unsafe_allow_html=True)
-                    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-                    second_feature = st.selectbox("Select another feature for scatter plot", [col for col in numeric_columns if col != selected_feature])
-                    fig, ax = plt.subplots(figsize=(10, 6))
-                    sns.scatterplot(x=selected_feature, y=second_feature, data=EDA_df, ax=ax)
-                    ax.set_title(f'Scatter Plot of {selected_feature} vs {second_feature}')
-                    ax.set_xlabel(selected_feature)
-                    ax.set_ylabel(second_feature)
-                    st.pyplot(fig)
-                else:
-                    st.warning("Not enough numeric features for a scatter plot.")
+            st.markdown('<div class="header">PCA Scatter Plot</div>', unsafe_allow_html=True)
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.scatterplot(x=pca_selected_feature1, y=pca_selected_feature2, data=pca_df, ax=ax)
+            ax.set_title(f'Scatter Plot of {pca_selected_feature1} vs {pca_selected_feature2}')
+            ax.set_xlabel(pca_selected_feature1)
+            ax.set_ylabel(pca_selected_feature2)
+            st.pyplot(fig)
+
+        col4, col5, col6 = st.columns(3)
+        with col4:
+            st.markdown('<div class="header">t-SNE Histogram</div>', unsafe_allow_html=True)
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.histplot(tsne_df[tsne_selected_feature1], bins=10, kde=True, ax=ax)
+            ax.set_title(f'Histogram of {tsne_selected_feature1}')
+            ax.set_xlabel(tsne_selected_feature1)
+            ax.set_ylabel('Frequency')
+            st.pyplot(fig)
+
+        with col5:
+            st.markdown('<div class="header">t-SNE Box Plot</div>', unsafe_allow_html=True)
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.boxplot(x=tsne_df[tsne_selected_feature1], ax=ax)
+            ax.set_title(f'Box Plot of {tsne_selected_feature1}')
+            ax.set_xlabel(tsne_selected_feature1)
+            st.pyplot(fig)
+
+        with col6:
+            st.markdown('<div class="header">t-SNE Scatter Plot</div>', unsafe_allow_html=True)
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.scatterplot(x=tsne_selected_feature1, y=tsne_selected_feature2, data=tsne_df, ax=ax)
+            ax.set_title(f'Scatter Plot of {tsne_selected_feature1} vs {tsne_selected_feature2}')
+            ax.set_xlabel(tsne_selected_feature1)
+            ax.set_ylabel(tsne_selected_feature2)
+            st.pyplot(fig)
     else:
         st.warning("Please upload a CSV or an Excel file in Home Page to proceed.")
