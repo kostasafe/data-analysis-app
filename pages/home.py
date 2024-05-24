@@ -31,7 +31,7 @@ def show_Home():
                         st.write(new_list)
                 st.header("Ποια στήλη αντιστοιχεί στη μεταβλητή εξόδου;")
                 
-                output_column = st.selectbox("Παρακαλώ διαλέξτε τη μεταβλητή εξόδου!", st.session_state.new_dataset.columns)
+                output_column = st.selectbox("Παρακαλώ διαλέξτε τη μεταβλητή εξόδου!", st.session_state.new_dataset.columns[::-1])
                 if output_column not in st.session_state:
                         st.session_state.output_column = output_column
 
@@ -45,7 +45,8 @@ def show_Home():
                         if generate_button_2:    
                                 dataset_without_column = st.session_state.new_dataset.copy() #if we dont make a copy like this our new_dataset saved dataframe will be lost
                                 st.session_state.target_column = dataset_without_column.pop(output_column)
-                
+                                st.session_state.dataset_with_no_label = dataset_without_column
+                                
                                 # Display the modified DataFrame in left_column
                                 left_column, right_column = st.columns(2)
                                 with left_column:
@@ -64,7 +65,10 @@ def show_Home():
 def load_data(uploaded_file):   
         if uploaded_file.name.endswith('.csv'):
                 df = pd.read_csv(uploaded_file)
-                return df
         elif uploaded_file.name.endswith('.xlsx'):
                 df = pd.read_excel(uploaded_file)
-                return df
+        else:
+                st.write("This app only works with .csv and .xlsx files.")
+                return
+        df.dropna(inplace=True) # Remove all rows where any column is missing
+        return df
