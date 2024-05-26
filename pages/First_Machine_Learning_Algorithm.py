@@ -1,17 +1,30 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from sklearn.cluster import DBSCAN
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from matplotlib.colors import ListedColormap
 
 # Function to display the DBSCAN clustering plot
 def show_dbscan_clustering():
     # Get the dataset from the session
-    dataset = st.session_state.dataset_with_no_label
+    dataset = st.session_state.numeric_dataset_with_no_label
 
+    # Normalize data
+    data_norm = dataset.copy()
+    sc = StandardScaler()
+    data_norm = sc.fit_transform(dataset)
+    
+    # PCA
+    pca = PCA(n_components=2)
+    pca_components = pca.fit_transform(data_norm)
+    pca_df = pd.DataFrame(data=pca_components, columns=['PCA1', 'PCA2'])
+    
     # Apply DBSCAN clustering
     dbscan = DBSCAN(eps=0.5, min_samples=5)
-    labels = dbscan.fit_predict(dataset)
+    labels = dbscan.fit_predict(pca_df)
 
     # Create a colormap
     unique_labels = np.unique(labels)
@@ -27,7 +40,7 @@ def show_dbscan_clustering():
         else:
             color = colormap(label)
         class_member_mask = (labels == label)
-        xy = dataset[class_member_mask]
+        xy = pca_df[class_member_mask]
         ax.scatter(xy.iloc[:, 0], xy.iloc[:, 1], c=[color], label=f'Cluster {label}' if label != -1 else 'Noise')
     
     ax.set_title("DBSCAN Clustering")

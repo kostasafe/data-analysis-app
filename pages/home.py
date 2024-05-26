@@ -45,13 +45,14 @@ def show_Home():
                         if generate_button_2:    
                                 dataset_without_column = st.session_state.new_dataset.copy() #if we dont make a copy like this our new_dataset saved dataframe will be lost
                                 st.session_state.target_column = dataset_without_column.pop(output_column)
-                                st.session_state.dataset_with_no_label = dataset_without_column
+                                numeric_df = dataset_without_column.select_dtypes(include=[int, float])
+                                st.session_state.numeric_dataset_with_no_label = numeric_df
                                 
                                 # Display the modified DataFrame in left_column
                                 left_column, right_column = st.columns(2)
                                 with left_column:
                                         st.write("Νέο Dataframe:")
-                                        st.write(dataset_without_column)
+                                        st.write(numeric_df)
                 
                                 # Display the excluded column in right_column
                                 with right_column:
