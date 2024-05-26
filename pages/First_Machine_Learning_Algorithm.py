@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
+from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from matplotlib.colors import ListedColormap
@@ -56,6 +57,50 @@ def show_dbscan_clustering():
     # Display the plot
     st.pyplot(fig)
 
+# Function to display the KMeans clustering plot
+def show_kmeans_clustering(user_parameter=3):
+    # Get the dataset from the session
+    dataset = st.session_state.numeric_dataset_with_no_label
+
+    # Normalize data
+    sc = StandardScaler()
+    data_norm = sc.fit_transform(dataset)
+    
+    # PCA for dimensionality reduction
+    pca = PCA(n_components=2)
+    pca_components = pca.fit_transform(data_norm)
+    pca_df = pd.DataFrame(data=pca_components, columns=['PCA1', 'PCA2'])
+    
+    # Apply KMeans clustering
+    kmeans = KMeans(n_clusters=user_parameter)  # Adjust the number of clusters as needed
+    labels = kmeans.fit_predict(pca_df)
+
+    # Create a colormap
+    unique_labels = np.unique(labels)
+    colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+    colormap = ListedColormap(colors)
+
+    # Plot the clusters
+    fig, ax = plt.subplots(figsize=(10, 6))
+    for label in unique_labels:
+        color = colormap(label)
+        class_member_mask = (labels == label)
+        xy = pca_df[class_member_mask]
+        ax.scatter(xy.iloc[:, 0], xy.iloc[:, 1], c=[color], label=f'Cluster {label}')
+    
+    ax.set_title("KMeans Clustering")
+    ax.set_xlabel("PCA1")
+    ax.set_ylabel("PCA2")
+    ax.legend()
+    
+    # Create a colorbar
+    sm = plt.cm.ScalarMappable(cmap=colormap, norm=plt.Normalize(vmin=min(unique_labels), vmax=max(unique_labels)))
+    sm.set_array([])
+    fig.colorbar(sm, ax=ax, label="Cluster Label")
+
+    # Display the plot
+    st.pyplot(fig)
+
 # Main function to set up the Streamlit page
 def show_First_Machine_Learning_Algorithm():
     st.markdown(
@@ -96,7 +141,7 @@ def show_First_Machine_Learning_Algorithm():
             show_dbscan_clustering()
         
         with right_column:
-            st.markdown('<div class="header-tsne">DBSCAN clustering</div>', unsafe_allow_html=True)
+            st.markdown('<div class="header-tsne">KMeans clustering</div>', unsafe_allow_html=True)
             st.divider()
-            show_dbscan_clustering()
+            show_kmeans_clustering()
 
