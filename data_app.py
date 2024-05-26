@@ -39,8 +39,8 @@ styles = {
 functions = {
     "Home": pg.show_Home,
     "2D Visualization": pg.show_TwoD_Visualization,
-    "1st Machine Learning Algorithm": pg.show_First_Machine_Learning_Algorithm,
-    #"Second Machine Learning Algorithm": pg.show_Second_Machine_Learning_Algorithm,
+    "Clustering Algorithms": pg.show_Clustering_Algorithms,
+    #"Classification Algorithms": pg.show_Classification_Algorithms,
     "Algorithm Comparison": pg.show_Comparison,
     "Information": pg.show_Info,
     #"GitHub" :pg.show_Git,

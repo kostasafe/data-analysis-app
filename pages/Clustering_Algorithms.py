@@ -102,7 +102,7 @@ def show_kmeans_clustering(user_parameter=3):
     st.pyplot(fig)
 
 # Main function to set up the Streamlit page
-def show_First_Machine_Learning_Algorithm():
+def show_Clustering_Algorithms():
     st.markdown(
         """
         <style>
