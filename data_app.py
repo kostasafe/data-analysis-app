@@ -5,7 +5,7 @@ import pages as pg
 
 st.set_page_config(layout="wide",initial_sidebar_state="collapsed", page_title='data app', page_icon='img/ionianlogo.ico')
 
-pages = ["Home", "2D Visualization", "1st Machine Learning Algorithm", "2nd Machine Learning Algorithm", "Algorithm Comparison", "Information", "GitHub"]
+pages = ["Home", "2D Visualization", "Clustering Algorithms", "Classification Algorithms", "Algorithm Comparison", "Information", "GitHub"]
 urls = {"GitHub":"https://github.com/kostasafe/data-analysis-app/"}
 parent_dir = os.path.dirname(os.path.abspath("__file__"))
 options = {
