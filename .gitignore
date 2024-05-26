@@ -1,1 +1,11 @@
-__pycache__/
+# ignore pycache
+__pycache__
+
+# ignore editor files
+*.pyproj
+*.sln
+.vs
+.vscode/
+.idea
+
+*.csv
