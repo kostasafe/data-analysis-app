@@ -3,7 +3,7 @@
 ## IONIAN UNIVERSITY - DEPARTMENT OF INFORMATICS
 
 
-a
+
 ### Data Analysis Application
 A web app developed for university purposes.</br>
 Running and testing the application requires you to install all libraries and frameworks in the requirments file. </br>
