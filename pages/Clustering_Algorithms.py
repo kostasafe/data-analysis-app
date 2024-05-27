@@ -45,8 +45,8 @@ def show_dbscan_clustering():
         ax.scatter(xy.iloc[:, 0], xy.iloc[:, 1], c=[color], label=f'Cluster {label}' if label != -1 else 'Noise')
     
     ax.set_title("DBSCAN Clustering")
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
+    ax.set_xlabel("Principal Component 1")
+    ax.set_ylabel("Principal Component 2")
     ax.legend()
     
     # Create a colorbar
@@ -89,8 +89,8 @@ def show_kmeans_clustering(user_parameter=3):
         ax.scatter(xy.iloc[:, 0], xy.iloc[:, 1], c=[color], label=f'Cluster {label}')
     
     ax.set_title("KMeans Clustering")
-    ax.set_xlabel("PCA1")
-    ax.set_ylabel("PCA2")
+    ax.set_xlabel("Principal Component 1")
+    ax.set_ylabel("Principal Component 2")
     ax.legend()
     
     # Create a colorbar
