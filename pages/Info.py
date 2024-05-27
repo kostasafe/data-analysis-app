@@ -1,9 +1,24 @@
 import streamlit as st
 
 def show_Info(): 
-        st.header("Οδηγίες χρήσης")
-        st.write("Οδηγίες  \nΚι άλλες οδηγίες  \nΟδηγιέισον")
-        st.header("Πληροφορίες")
+        st.subheader("Οδηγίες χρήσης")
+        st.markdown(
+                        """
+                        Test list  with bullets:
+                        - Οδηγίες
+                        - Κι άλλες οδηγίες
+                        - Οδηγιέισον
+                        """
+                )
+        st.subheader("Πληροφορίες")
         st.write("Αυτή η εφαρμογή δημιουργήθηκε για την εκπλήρωση του μαθήματος [Τεχνολογία Λογισμικού](https://opencourses.ionio.gr/courses/DDI259/)")
-        st.header("Credits")
-        st.write("[devpersi](https://github.com/devpersi):  \nInfo, ...  \n\n[kostasafe](https://github.com/kostasafe):  \nProject setup, 2D visualization")
+        st.subheader("Development Team")
+        st.markdown(
+                        """ 
+                         [devpersi](https://github.com/devpersi): 2D Visualization, DBScan Clustering Algorithm   
+                         [kostasafe](https://github.com/kostasafe): Project Setup, 2D visualization
+                         [p15kalo](https://github.com/p15kalo): KMeans Clustering Algorithm
+                        """
+                )        
+        
+        
