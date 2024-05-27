@@ -9,16 +9,16 @@ def show_Info():
                         - Κι άλλες οδηγίες
                         - Οδηγιέισον
                         """
-                )
+        )
         st.subheader("Πληροφορίες")
         st.write("Αυτή η εφαρμογή δημιουργήθηκε για την εκπλήρωση του μαθήματος [Τεχνολογία Λογισμικού](https://opencourses.ionio.gr/courses/DDI259/)")
         st.subheader("Development Team")
         st.markdown(
                         """ 
-                         [devpersi](https://github.com/devpersi): 2D Visualization, DBScan Clustering Algorithm   
-                         [kostasafe](https://github.com/kostasafe): Project Setup, 2D visualization
-                         [p15kalo](https://github.com/p15kalo): KMeans Clustering Algorithm
+                         [devpersi](https://github.com/devpersi): 2D Visualization, DBScan Clustering Algorithm         
+                         [kostasafe](https://github.com/kostasafe): Project Setup, 2D visualization     
+                         [p15kalo](https://github.com/p15kalo): KMeans Clustering Algorithm     
                         """
-                )        
+        )        
         
         
