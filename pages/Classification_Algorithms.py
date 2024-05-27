@@ -37,7 +37,7 @@ def show_Classification_Algorithms():
     )
     data = st.session_state.new_dataset
     target_column_name = st.session_state.target_column.name
-    
+
 
     st.markdown('<div class="title">Classification Algorithms</div>', unsafe_allow_html=True)
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
@@ -53,7 +53,7 @@ def show_Classification_Algorithms():
             visualize_results(accuracy, cm, report)
         
         with right_column:
-            st.markdown('<div class="header-two">KMeans clustering</div>', unsafe_allow_html=True)
+            st.markdown('<div class="header-two">SOON..</div>', unsafe_allow_html=True)
             st.divider()
             # Place your KMeans clustering code here
     else:
