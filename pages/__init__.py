@@ -1,6 +1,6 @@
 from pages.home import show_Home
 from pages.TwoD_Visualization import show_TwoD_Visualization
 from pages.Clustering_Algorithms import show_Clustering_Algorithms
-#from pages.Classification_Algorithms import show_Classification_Algorithms
+from pages.Classification_Algorithms import show_Classification_Algorithms
 from pages.Comparison import show_Comparison
 from pages.Info import show_Info

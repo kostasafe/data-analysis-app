@@ -40,7 +40,7 @@ functions = {
     "Home": pg.show_Home,
     "2D Visualization": pg.show_TwoD_Visualization,
     "Clustering Algorithms": pg.show_Clustering_Algorithms,
-    #"Classification Algorithms": pg.show_Classification_Algorithms,
+    "Classification Algorithms": pg.show_Classification_Algorithms,
     "Algorithm Comparison": pg.show_Comparison,
     "Information": pg.show_Info,
     #"GitHub" :pg.show_Git,

@@ -117,7 +117,7 @@ def show_Clustering_Algorithms():
             color: FireBrick;
             text-align: center;
         }
-        .header-tsne {
+        .header-two {
             font-size: 40px;
             color: violet;
             text-align: center;
@@ -130,7 +130,7 @@ def show_Clustering_Algorithms():
         """, unsafe_allow_html=True
     )
     
-    st.markdown('<div class="title">2D Visualizations</div>', unsafe_allow_html=True)
+    st.markdown('<div class="title">Clustering Algorithms</div>', unsafe_allow_html=True)
     if st.session_state.uploaded_file is not None:
         st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
@@ -141,7 +141,8 @@ def show_Clustering_Algorithms():
             show_dbscan_clustering()
         
         with right_column:
-            st.markdown('<div class="header-tsne">KMeans clustering</div>', unsafe_allow_html=True)
+            st.markdown('<div class="header-two">KMeans clustering</div>', unsafe_allow_html=True)
             st.divider()
             show_kmeans_clustering()
-
+    else:
+        st.warning("Please upload a CSV or an Excel file in Home Page to proceed.")
