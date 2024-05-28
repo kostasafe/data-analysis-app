@@ -154,7 +154,3 @@ def visualize_knn_decision_boundary(X_train_pca, X_test_pca, y_train, y_test, y_
     plt.ylabel('Principal Component 2')
     plt.title('2D Decision Boundary of k-NN')
     st.pyplot(plt)
-
-#showing which function is the main function to be called
-if __name__ == "__main__":
-    show_Classification_Algorithms()
