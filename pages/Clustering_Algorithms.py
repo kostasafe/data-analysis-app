@@ -4,17 +4,18 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.cluster import KMeans
 from matplotlib.colors import ListedColormap
+from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from pages.TwoD_Visualization import convert_to_norm_pca
 
 # Function to display the DBSCAN clustering plot
-def show_dbscan_clustering():
+def show_dbscan_clustering(eps, min_samples):
     # Get the dataset from the session
     dataset = st.session_state.numeric_dataset_with_no_label
 
     pca_df = convert_to_norm_pca(dataset)
     
     # Apply DBSCAN clustering
-    dbscan = DBSCAN(eps=0.5, min_samples=5)
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
     labels = dbscan.fit_predict(pca_df)
 
     # Create a colormap
@@ -25,11 +26,7 @@ def show_dbscan_clustering():
     # Plot the clusters
     fig, ax = plt.subplots(figsize=(10, 6))
     for label in unique_labels:
-        if label == -1:
-            # Noise points
-            color = [0, 0, 0, 1]
-        else:
-            color = colormap(label)
+        color = [0, 0, 0, 1] if label == -1 else colormap(label)
         class_member_mask = (labels == label)
         xy = pca_df[class_member_mask]
         ax.scatter(xy.iloc[:, 0], xy.iloc[:, 1], c=[color], label=f'Cluster {label}' if label != -1 else 'Noise')
@@ -47,15 +44,22 @@ def show_dbscan_clustering():
     # Display the plot
     st.pyplot(fig)
 
+    if len(unique_labels) > 1:
+        silhouette_avg = silhouette_score(pca_df, labels)
+        calinski_harabasz_avg = calinski_harabasz_score(pca_df, labels)
+        st.write(f"Silhouette Score: {silhouette_avg:.3f} | Calinski-Harabasz Score: {calinski_harabasz_avg:.3f}")
+    else:
+        st.write("Silhouette Score: Not applicable (only one cluster found) | Calinski-Harabasz Score: Not applicable (only one cluster found)")
+
 # Function to display the KMeans clustering plot
-def show_kmeans_clustering(user_parameter=3):
+def show_kmeans_clustering(n_clusters):
     # Get the dataset from the session
     dataset = st.session_state.numeric_dataset_with_no_label
 
     pca_df = convert_to_norm_pca(dataset)
     
     # Apply KMeans clustering
-    kmeans = KMeans(n_clusters=user_parameter)  # Adjust the number of clusters as needed
+    kmeans = KMeans(n_clusters=n_clusters)  # Adjust the number of clusters as needed
     labels = kmeans.fit_predict(pca_df)
 
     # Create a colormap
@@ -84,7 +88,10 @@ def show_kmeans_clustering(user_parameter=3):
     # Display the plot
     st.pyplot(fig)
 
-# Main function to set up the Streamlit page
+    silhouette_avg = silhouette_score(pca_df, labels)
+    calinski_harabasz_avg = calinski_harabasz_score(pca_df, labels)
+    st.write(f"Silhouette Score: {silhouette_avg:.3f} | Calinski-Harabasz Score: {calinski_harabasz_avg:.3f}")
+    
 def show_Clustering_Algorithms():
     st.markdown(
         """
@@ -121,11 +128,17 @@ def show_Clustering_Algorithms():
         with left_column:
             st.markdown('<div class="header">DBSCAN clustering</div>', unsafe_allow_html=True) 
             st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-            show_dbscan_clustering()
+            sub_l_c, sub_r_c = st.columns(2)
+            with sub_l_c:
+                eps = st.slider('Select eps value for DBSCAN', 0.1, 10.0, 0.5, 0.1)
+            with sub_r_c:
+                min_samples = st.slider('Select min_samples for DBSCAN', 1, 20, 5)
+            show_dbscan_clustering(eps, min_samples)
         
         with right_column:
             st.markdown('<div class="header-two">KMeans clustering</div>', unsafe_allow_html=True)
             st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-            show_kmeans_clustering()
+            n_clusters = st.slider('Select number of clusters for KMeans', 2, 10, 3)
+            show_kmeans_clustering(n_clusters)
     else:
-        st.warning("Please upload a CSV or an Excel file in Home Page to proceed.")
+        st.warning("Please upload a CSV or an Excel file on the Home Page to proceed.")
