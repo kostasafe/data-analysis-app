@@ -132,7 +132,7 @@ def visualize_knn_decision_boundary(X_train_pca, X_test_pca, y_train, y_test, y_
                          np.arange(y_min, y_max, h))
     Z = knn.predict(np.c_[xx.ravel(), yy.ravel()])
 
-    # Ensure xx and yy are of type float64
+    # Ensure xx and yy are of type float64 for plotting
     xx = xx.astype(np.float64)
     yy = yy.astype(np.float64)
 

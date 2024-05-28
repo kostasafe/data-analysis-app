@@ -16,7 +16,7 @@ def show_Info():
         st.markdown(
                         """ 
                          [devpersi](https://github.com/devpersi): 2D Visualization, DBScan Clustering Algorithm         
-                         [kostasafe](https://github.com/kostasafe): Project Setup, 2D visualization     
+                         [kostasafe](https://github.com/kostasafe): Project Setup, 2D Visualization, K-NN Classification Algorithm     
                          [p15kalo](https://github.com/p15kalo): KMeans Clustering Algorithm     
                         """
         )        
