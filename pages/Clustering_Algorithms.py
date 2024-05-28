@@ -137,12 +137,12 @@ def show_Clustering_Algorithms():
         left_column, right_column = st.columns(2)
         with left_column:
             st.markdown('<div class="header">DBSCAN clustering</div>', unsafe_allow_html=True) 
-            st.divider()
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
             show_dbscan_clustering()
         
         with right_column:
             st.markdown('<div class="header-two">KMeans clustering</div>', unsafe_allow_html=True)
-            st.divider()
+            st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
             show_kmeans_clustering()
     else:
         st.warning("Please upload a CSV or an Excel file in Home Page to proceed.")
