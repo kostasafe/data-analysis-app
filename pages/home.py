@@ -35,11 +35,6 @@ def show_Home():
                 if output_column not in st.session_state:
                         st.session_state.output_column = output_column
 
-                #column_names = st.session_state.new_dataset.columns.tolist() #taking column headers and convert them to a list
-                #column_names_str = " | ".join(column_names) #split them with |
-                #column_names_formatted = f"**<b>Columns:</b>** [{column_names_str}]" #make it prettier
-                #st.markdown(column_names_formatted, unsafe_allow_html=True)
-                #output_column = st.text_input("Παρακαλώ γράψτε μου το ακριβές όνομα όπως αναγράφεται παραπάνω!")
                 generate_button_2 = st.button('Πατήστε εδώ για προβολή του διορθωμένου dataset!')
                 if output_column :
                         if generate_button_2:    

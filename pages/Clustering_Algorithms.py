@@ -1,27 +1,17 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 from matplotlib.colors import ListedColormap
+from pages.TwoD_Visualization import convert_to_norm_pca
 
 # Function to display the DBSCAN clustering plot
 def show_dbscan_clustering():
     # Get the dataset from the session
     dataset = st.session_state.numeric_dataset_with_no_label
 
-    # Normalize data
-    data_norm = dataset.copy()
-    sc = StandardScaler()
-    data_norm = sc.fit_transform(dataset)
-    
-    # PCA
-    pca = PCA(n_components=2)
-    pca_components = pca.fit_transform(data_norm)
-    pca_df = pd.DataFrame(data=pca_components, columns=['PCA1', 'PCA2'])
+    pca_df = convert_to_norm_pca(dataset)
     
     # Apply DBSCAN clustering
     dbscan = DBSCAN(eps=0.5, min_samples=5)
@@ -62,14 +52,7 @@ def show_kmeans_clustering(user_parameter=3):
     # Get the dataset from the session
     dataset = st.session_state.numeric_dataset_with_no_label
 
-    # Normalize data
-    sc = StandardScaler()
-    data_norm = sc.fit_transform(dataset)
-    
-    # PCA for dimensionality reduction
-    pca = PCA(n_components=2)
-    pca_components = pca.fit_transform(data_norm)
-    pca_df = pd.DataFrame(data=pca_components, columns=['PCA1', 'PCA2'])
+    pca_df = convert_to_norm_pca(dataset)
     
     # Apply KMeans clustering
     kmeans = KMeans(n_clusters=user_parameter)  # Adjust the number of clusters as needed
