@@ -83,7 +83,7 @@ Install the required packages using the following command:
 
 ### Acknowledgments
 
-Streamlit for providing an easy-to-use web application framework.
+Streamlit for providing an easy-to-use web application framework.</br>
 The developers of Pandas, Numpy, Matplotlib, Seaborn, and scikit-learn for their invaluable libraries.
 
 <details>
