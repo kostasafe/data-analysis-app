@@ -29,7 +29,8 @@ This Streamlit-based application provides a comprehensive data analysis tool for
     - **k-Means Clustering**
         - Cluster analysis and visualization.
         - Computes and displays inertia and silhouette score.
-    - Placeholder for additional clustering algorithms. (DBSCAN)
+    -  **DBSCAN Clustering**
+        - Generates a PCA plot for the clustering result
 
 5. **Results Visualization**
     - Confusion matrix and classification reports for classification models.
@@ -44,11 +45,10 @@ This Streamlit-based application provides a comprehensive data analysis tool for
 - **Numpy** for numerical computations.
 - **Matplotlib** and **Seaborn** for plotting and visualizations.
 - **scikit-learn** for machine learning algorithms.
-- **OpenPyXL** for Excel file support.
 
 Install the required packages using the following command:
   ```bash
-  pip install streamlit pandas numpy matplotlib seaborn scikit-learn openpyxl
+  pip install -r requirements.txt
   ```
 
 ## Usage
