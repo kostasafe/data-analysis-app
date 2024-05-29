@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Define a helper function to create subplots
-def plot_metric(ax, metric, alg1_score, alg2_score):
-    ax.bar(['DBScan', 'KMeans'], [alg1_score, alg2_score], color=['blue', 'orange'])
+def plot_metric(ax, metric, alg1_score, alg2_score, alg1_name, alg2_name):
+    ax.bar([alg1_name, alg2_name], [alg1_score, alg2_score], color=['blue', 'orange'])
     ax.set_title(metric)
     ax.set_ylim(0, max(alg1_score, alg2_score) * 1.1)
 
@@ -63,7 +63,7 @@ def show_Comparison():
             for i, metric in enumerate(metrics):
                 row = i // 3
                 col = i % 3
-                plot_metric(axes[row, col], metric, df['DBScan'][i], df['KMeans'][i])
+                plot_metric(axes[row, col], metric, df['DBScan'][i], df['KMeans'][i], 'DBScan', 'KMeans')
 
             st.pyplot(fig)
             
@@ -88,10 +88,63 @@ def show_Comparison():
 
             st.write("### Summary")
             for i in range(len(metrics)):
-                st.write(f"- **{metrics[i]}**: DBScan: {df['DBScan'][i]} | KMeans: {df['KMeans'][i]}")
+                st.write(f"- **{metrics[i]}**: DBScan: {df['DBScan'][i]:.3f} | KMeans: {df['KMeans'][i]:.3f}")
         else:
             st.warning("No data available for comparison.")
     with right_column:
         st.markdown('<div class="header-two">Classification</div>', unsafe_allow_html=True)
-        st.warning("No data available for comparison.")
+        if "knn_scores" in st.session_state and "random_forest_scores" in st.session_state:
+            knn_scores = st.session_state.knn_scores
+            random_forest_scores = st.session_state.random_forest_scores
+            data = {
+            'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC', 'Log Loss'],
+            'KNN': knn_scores,
+            'Random Forest': random_forest_scores
+            }
+            
+            # Convert the data into a DataFrame
+            df = pd.DataFrame(data)
+
+            st.subheader('Comparison Table')
+            st.table(df)
+            st.subheader('Metric Comparison')
+            metrics = df['Metric']
+            
+            # Plotting the metrics comparison
+            fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+            for i, metric in enumerate(metrics):
+                row = i // 3
+                col = i % 3
+                plot_metric(axes[row, col], metric, df['KNN'][i], df['Random Forest'][i], 'KNN', 'Random Forest')
+
+            st.pyplot(fig)
+            
+            # Detailed view for each metric
+            st.subheader('Detailed Metrics View')
+
+            metric_selected = st.selectbox('Select a metric to compare:', metrics)
+
+            alg1_score = df.loc[df['Metric'] == metric_selected, 'KNN'].values[0]
+            alg2_score = df.loc[df['Metric'] == metric_selected, 'Random Forest'].values[0]
+
+            st.write(f"### {metric_selected}")
+            st.write(f"**KNN**: {alg1_score}")
+            st.write(f"**Random Forest**: {alg2_score}")
+
+            if alg1_score > alg2_score and metric_selected != 'Log Loss':
+                st.success(f"KNN performs better in {metric_selected} with a score of {alg1_score}.")
+            elif alg1_score < alg2_score and metric_selected != 'Log Loss':
+                st.success(f"Random Forest performs better in {metric_selected} with a score of {alg2_score}.")
+            elif alg1_score > alg2_score and metric_selected == 'Log Loss':
+                st.success(f"Random Forest performs better in {metric_selected} with a score of {alg2_score}.")
+            elif alg1_score < alg2_score and metric_selected == 'Log Loss':
+                st.success(f"KNN performs better in {metric_selected} with a score of {alg1_score}.")
+            else:
+                st.info(f"Both algorithms perform equally in {metric_selected} with a score of {alg1_score}.")
+
+            st.write("### Summary")
+            for i in range(len(metrics)):
+                st.write(f"- **{metrics[i]}**: KNN: {df['KNN'][i]:.3f} | Random Forest: {df['Random Forest'][i]:.3f}")
+        else:
+            st.warning("No data available for comparison.")
         

@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, log_loss, confusion_matrix, classification_report
 import seaborn as sns
 from sklearn.decomposition import PCA
 
@@ -101,12 +101,20 @@ def knn_classification(data, target_column_name):
 
     # Make predictions
     y_pred = knn.predict(X_test_pca)
+    y_pred_proba = knn.predict_proba(X_test_pca)
 
     # Evaluate the model
     accuracy = accuracy_score(y_test, y_pred)
     cm = confusion_matrix(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, average='weighted')
+    recall = recall_score(y_test, y_pred, average='weighted')
+    f1 = f1_score(y_test, y_pred, average='weighted')
+    roc_auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
+    logloss = log_loss(y_test, y_pred_proba)
     report = classification_report(y_test, y_pred, output_dict=True)
 
+    st.session_state.knn_scores = [accuracy, precision, recall, f1, roc_auc, logloss]
+    
     return accuracy, cm, report, X_train_pca, X_test_pca, y_train, y_test, y_pred
 
 def random_forest_classification(data, target_column_name):
@@ -140,11 +148,19 @@ def random_forest_classification(data, target_column_name):
 
     # Make predictions
     y_pred = rf.predict(X_test_pca)
+    y_pred_proba = rf.predict_proba(X_test_pca)
 
     # Evaluate the model
     accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, average='weighted')
+    recall = recall_score(y_test, y_pred, average='weighted')
+    f1 = f1_score(y_test, y_pred, average='weighted')
+    roc_auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
+    logloss = log_loss(y_test, y_pred_proba)
     cm = confusion_matrix(y_test, y_pred)
     report = classification_report(y_test, y_pred, output_dict=True)
+
+    st.session_state.random_forest_scores = [accuracy, precision, recall, f1, roc_auc, logloss]
 
     return accuracy, cm, report, X_train_pca, X_test_pca, y_train, y_test, y_pred
 
