@@ -2,7 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.cluster import DBSCAN, KMeans
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, adjusted_rand_score, adjusted_mutual_info_score, rand_score
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, adjusted_rand_score, adjusted_mutual_info_score, rand_score, mutual_info_score
 from matplotlib.colors import ListedColormap
 from pages.TwoD_Visualization import convert_to_norm_pca
 
@@ -47,16 +47,28 @@ def show_dbscan_clustering(eps, min_samples):
     if len(unique_labels) > 1:
         silhouette_avg = silhouette_score(pca_df, labels)
         calinski_harabasz_avg = calinski_harabasz_score(pca_df, labels)
+        
+        metric_scores = [silhouette_avg, calinski_harabasz_avg]
+        
         st.write(f"Silhouette Score: {silhouette_avg:.3f} | Calinski-Harabasz Score: {calinski_harabasz_avg:.3f}")
         if true_labels is not None:
             ari = adjusted_rand_score(true_labels, labels)
             ami = adjusted_mutual_info_score(true_labels, labels)
             ri = rand_score(true_labels, labels)
-            st.write(f"Adjusted Rand Index (ARI): {ari:.3f}")
-            st.write(f"Adjusted Mutual Information (AMI): {ami:.3f}")
-            st.write(f"Rand Index (RI): {ri:.3f}")
+            mi = mutual_info_score(true_labels, labels)
+            
+            metric_scores.extend([ari, ami, ri, mi])
+            
+            st.write(f"Adjusted Rand Index (ARI): {ari:.3f} | Adjusted Mutual Information (AMI): {ami:.3f}")
+            st.write(f"Rand Index (RI): {ri:.3f} | Mutual Info Score: {mi:.3f}")
+        else:
+            metric_scores.extend([-1, -1, -1, -1])
+            st.write("Adjusted Rand Index (ARI): Not applicable (true labels not provided) | Adjusted Mutual Information (AMI): (true labels not provided)")
+            st.write("Rand Index (RI): (true labels not provided) | Mutual Info Score: (true labels not provided)")
     else:
+        metric_scores = [-1, -1, -1, -1, -1, -1]
         st.write("Silhouette Score: Not applicable (only one cluster found) | Calinski-Harabasz Score: Not applicable (only one cluster found)")
+    st.session_state.dbscan_scores = metric_scores
 
 # Function to display the KMeans clustering plot
 def show_kmeans_clustering(n_clusters):
@@ -99,14 +111,23 @@ def show_kmeans_clustering(n_clusters):
 
     silhouette_avg = silhouette_score(pca_df, labels)
     calinski_harabasz_avg = calinski_harabasz_score(pca_df, labels)
+    metric_scores = [silhouette_avg, calinski_harabasz_avg]
     st.write(f"Silhouette Score: {silhouette_avg:.3f} | Calinski-Harabasz Score: {calinski_harabasz_avg:.3f}")
     if true_labels is not None:
-        ari = adjusted_rand_score(true_labels, labels)
-        ami = adjusted_mutual_info_score(true_labels, labels)
-        ri = rand_score(true_labels, labels)
-        st.write(f"Adjusted Rand Index (ARI): {ari:.3f}")
-        st.write(f"Adjusted Mutual Information (AMI): {ami:.3f}")
-        st.write(f"Rand Index (RI): {ri:.3f}")
+            ari = adjusted_rand_score(true_labels, labels)
+            ami = adjusted_mutual_info_score(true_labels, labels)
+            ri = rand_score(true_labels, labels)
+            mi = mutual_info_score(true_labels, labels)
+            
+            metric_scores.extend([ari, ami, ri, mi])
+            
+            st.write(f"Adjusted Rand Index (ARI): {ari:.3f} | Adjusted Mutual Information (AMI): {ami:.3f}")
+            st.write(f"Rand Index (RI): {ri:.3f} | Mutual Info Score: {mi:.3f}")
+    else:
+        metric_scores.extend([-1, -1, -1, -1])
+        st.write("Adjusted Rand Index (ARI): Not applicable (true labels not provided) | Adjusted Mutual Information (AMI): (true labels not provided)")
+        st.write("Rand Index (RI): (true labels not provided) | Mutual Info Score: (true labels not provided)")
+    st.session_state.kmeans_scores = metric_scores
     
 def show_Clustering_Algorithms():
     st.markdown(
