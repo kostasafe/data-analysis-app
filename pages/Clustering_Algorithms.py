@@ -1,10 +1,9 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.cluster import DBSCAN
-from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN, KMeans
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, adjusted_rand_score, adjusted_mutual_info_score, rand_score
 from matplotlib.colors import ListedColormap
-from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from pages.TwoD_Visualization import convert_to_norm_pca
 
 # Function to display the DBSCAN clustering plot
@@ -13,6 +12,7 @@ def show_dbscan_clustering(eps, min_samples):
     dataset = st.session_state.numeric_dataset_with_no_label
 
     pca_df = convert_to_norm_pca(dataset)
+    true_labels = st.session_state.target_column
     
     # Apply DBSCAN clustering
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
@@ -48,6 +48,13 @@ def show_dbscan_clustering(eps, min_samples):
         silhouette_avg = silhouette_score(pca_df, labels)
         calinski_harabasz_avg = calinski_harabasz_score(pca_df, labels)
         st.write(f"Silhouette Score: {silhouette_avg:.3f} | Calinski-Harabasz Score: {calinski_harabasz_avg:.3f}")
+        if true_labels is not None:
+            ari = adjusted_rand_score(true_labels, labels)
+            ami = adjusted_mutual_info_score(true_labels, labels)
+            ri = rand_score(true_labels, labels)
+            st.write(f"Adjusted Rand Index (ARI): {ari:.3f}")
+            st.write(f"Adjusted Mutual Information (AMI): {ami:.3f}")
+            st.write(f"Rand Index (RI): {ri:.3f}")
     else:
         st.write("Silhouette Score: Not applicable (only one cluster found) | Calinski-Harabasz Score: Not applicable (only one cluster found)")
 
@@ -57,6 +64,8 @@ def show_kmeans_clustering(n_clusters):
     dataset = st.session_state.numeric_dataset_with_no_label
 
     pca_df = convert_to_norm_pca(dataset)
+    true_labels = st.session_state.target_column
+    
     
     # Apply KMeans clustering
     kmeans = KMeans(n_clusters=n_clusters)  # Adjust the number of clusters as needed
@@ -91,6 +100,13 @@ def show_kmeans_clustering(n_clusters):
     silhouette_avg = silhouette_score(pca_df, labels)
     calinski_harabasz_avg = calinski_harabasz_score(pca_df, labels)
     st.write(f"Silhouette Score: {silhouette_avg:.3f} | Calinski-Harabasz Score: {calinski_harabasz_avg:.3f}")
+    if true_labels is not None:
+        ari = adjusted_rand_score(true_labels, labels)
+        ami = adjusted_mutual_info_score(true_labels, labels)
+        ri = rand_score(true_labels, labels)
+        st.write(f"Adjusted Rand Index (ARI): {ari:.3f}")
+        st.write(f"Adjusted Mutual Information (AMI): {ami:.3f}")
+        st.write(f"Rand Index (RI): {ri:.3f}")
     
 def show_Clustering_Algorithms():
     st.markdown(
