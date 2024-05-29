@@ -22,7 +22,6 @@ def show_Home():
                 st.session_state.uploaded_file = uploaded_file
         if uploaded_file is not None:
                 # To read file as bytes:
-                #bytes_data = uploaded_file.getvalue()
                 new_list = load_data(uploaded_file)
                 if new_list not in st.session_state:
                         st.session_state.new_dataset = new_list #store our dataframe to session_state
