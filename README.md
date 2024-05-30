@@ -23,7 +23,11 @@ This Streamlit-based application provides a comprehensive data analysis tool for
         - Standardizes features and reduces dimensions using PCA.
         - Trains a k-NN classifier and provides accuracy, confusion matrix, and classification report.
         - Visualizes the decision boundary in a 2D plot.
-    - Additional classification algorithms can be easily integrated.
+    - **Random Forest Classification**
+        - Splits the dataset into training and testing sets.
+        - Standardizes features and reduces dimensions using PCA.
+        - Combines the output of multiple decision trees to reach a single result.
+        - Visualizes the decision boundary in a 2D plot.
 
 4. **Clustering Algorithms**
     - **k-Means Clustering**
