@@ -1,0 +1,8 @@
+services:
+  streamlit:
+    container_name: "tlergasia"
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    ports:
+      - '8501:8501'
