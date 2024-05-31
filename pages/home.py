@@ -15,8 +15,8 @@ def show_Home():
          </style>
         """, unsafe_allow_html=True
         )
-        st.markdown('<div class="title">Καλωσήρθατε στην Εφαρμογή Εξόρυξης και Ανάλυσης δεδομένων!</div>', unsafe_allow_html=True)
-        st.header( "Παρακαλώ φορτώστε ένα αρχείο:", divider='rainbow')
+        st.markdown('<div class="title">Data Analysis Application</div>', unsafe_allow_html=True)
+        st.header( "Please upload a dataset:", divider='rainbow')
         uploaded_file = st.file_uploader("Choose a :green[CSV] or :green[Excel] file", type={"csv", "excel"})
         if uploaded_file not in st.session_state:
                 st.session_state.uploaded_file = uploaded_file
@@ -25,16 +25,16 @@ def show_Home():
                 new_list = load_data(uploaded_file)
                 if new_list not in st.session_state:
                         st.session_state.new_dataset = new_list #store our dataframe to session_state
-                generate_button_1 = st.button('Πατήστε εδώ για προβολή του dataset όπως διαβάστηκε από το αρχείο!')
+                generate_button_1 = st.button('Click here to see the dataset!')
                 if generate_button_1:
                         st.write(new_list)
-                st.header("Ποια στήλη αντιστοιχεί στη μεταβλητή εξόδου;")
+                st.header("Select the output column:", divider='rainbow')
                 
-                output_column = st.selectbox("Παρακαλώ διαλέξτε τη μεταβλητή εξόδου!", st.session_state.new_dataset.columns[::-1])
+                output_column = st.selectbox("Label column", st.session_state.new_dataset.columns[::-1])
                 if output_column not in st.session_state:
                         st.session_state.output_column = output_column
 
-                generate_button_2 = st.button('Πατήστε εδώ για προβολή του διορθωμένου dataset!')
+                generate_button_2 = st.button('Click here to see the modified dataset!')
                 if output_column :
                         if generate_button_2:    
                                 dataset_without_column = st.session_state.new_dataset.copy() #if we dont make a copy like this our new_dataset saved dataframe will be lost
@@ -45,12 +45,12 @@ def show_Home():
                                 # Display the modified DataFrame in left_column
                                 left_column, right_column = st.columns(2)
                                 with left_column:
-                                        st.write("Νέο Dataframe:")
+                                        st.write("New Dataframe:")
                                         st.write(numeric_df)
                 
                                 # Display the excluded column in right_column
                                 with right_column:
-                                        st.write("Μεταβλητή Εξόδου:")
+                                        st.write("Output column:")
                                         st.write(st.session_state.target_column)
                                         st.balloons()
 

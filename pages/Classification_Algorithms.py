@@ -139,7 +139,6 @@ def random_forest_classification(data, target_column_name):
     X_train_pca = pca.fit_transform(X_train)
     X_test_pca = pca.transform(X_test)
 
-    # Ζητάμε από τον χρήστη τον αριθμό των δέντρων για τον Random Forest
     n_estimators = st.number_input("Enter the number of estimators for Random Forest:", min_value=1, value=2, key='rf_n_estimators')
 
     # Create and train the Random Forest classifier
