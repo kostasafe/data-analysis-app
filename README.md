@@ -50,23 +50,22 @@ This Streamlit-based application provides a comprehensive data analysis tool for
 - **Matplotlib** and **Seaborn** for plotting and visualizations.
 - **scikit-learn** for machine learning algorithms.
 
-Install the required packages using the following command:
-  ```bash
-  pip install -r requirements.txt
-  ```
-
 ## Usage
 ### Native
-1. Make sure [python](https://www.python.org/downloads/) and [streamlit](https://docs.streamlit.io/get-started/installation) are installed and clone the repository
+1. Make sure [git](https://git-scm.com/downloads) and [python](https://www.python.org/downloads/) are installed and clone the repository
   ```bash
   git clone https://github.com/yourusername/data-analysis-app.git
   cd data-analysis-app
    ```
-2. Run the Streamlit app:
+2. Install the required packages using the following command:
+  ```bash
+  pip install -r requirements.txt
+  ```
+3. Run the Streamlit app:
   ```bash
   streamlit run data_app.py
   ```
-3. Open your browser and navigate to http://localhost:8501 to access the app.
+4. Open your browser and navigate to http://localhost:8501 to access the app.
 
 ### Docker
 1. Make sure [docker](https://docs.docker.com/engine/install/) is installed and clone 
