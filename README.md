@@ -5,7 +5,7 @@
 
 
 # Data Analysis Application
-This Streamlit-based application provides a comprehensive data analysis tool for performing various classification and clustering algorithms on datasets. It supports CSV and Excel file uploads and delivers intuitive visualizations and performance metrics for machine learning models.</br>
+This Streamlit-based application provides a comprehensive data analysis tool for performing various classification and clustering algorithms on datasets. It supports CSV or Excel file uploads and delivers intuitive visualizations and performance metrics for machine learning models.</br>
 
 ## Features
 
